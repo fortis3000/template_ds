@@ -31,8 +31,8 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
       - name: checking with isort
-        run: isort --check-only  .
+        run: python -m isort --check-only  .
       - name: checking with black
-        run: black --check --config pyproject.toml .
+        run: python -m black --check --config pyproject.toml .
       - name: checking with pylint
         run: python -m pylint .
