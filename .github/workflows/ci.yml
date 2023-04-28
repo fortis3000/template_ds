@@ -18,7 +18,7 @@ jobs:
   isort_formatting:
     runs-on: ubuntu-22.04
     steps:
-     - name: List files in the repository
+      - name: List files in the repository
         run: ls ${{ github.workspace }}
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
