@@ -26,5 +26,13 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.4.2
+      - name: poetry installation check
+        run: poetry --version  
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
+      - name: checking with isort
+        run: isort --check-only  .
+      - name: checking with black
+        run: black --check --config pyproject.toml .
+      - name: checking with pylint
+        run: python -m pylint .
