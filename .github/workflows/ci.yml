@@ -35,4 +35,4 @@ jobs:
       - name: checking with black
         run: poetry run black --check --config pyproject.toml .
       - name: checking with pylint
-        run: poetry run pylint .
+        run: poetry run pylint src/
