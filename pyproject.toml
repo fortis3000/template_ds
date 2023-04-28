@@ -1,3 +1,18 @@
+[tool.poetry]
+name = "DS project"
+version = "0.0.1"
+description = ""
+authors = [""]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.codestyle.dependencies]
+black = "23.3.0"
+isort = "5.12.0"
+pylint = "2.17.3"
+
 [tool.black]
 line-length = 88
 target-version = ['py310']
@@ -15,5 +30,3 @@ extend-exclude = '''
 [tool.isort]
 profile = "black"
 src_paths = ["src"]
-
-
