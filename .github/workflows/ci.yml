@@ -2,15 +2,14 @@ name: 'CI'
 
 on:
   workflow_dispatch:
+    paths: 
+      - "**/*.py"
+
   pull_request:
     paths: 
       - "**/*.py"
 
   # workflow_call
-
-  pull_request:
-    paths: 
-      - "**/*.py"
 
 permissions:
   contents: read
