@@ -39,6 +39,8 @@ jobs:
       - name: List of files changed
         id: file_changes
         uses: trilom/file-changes-action@v1.2.4
+        with:
+          output: ''
 
       - name: Installing Python
         uses: actions/setup-python@v4
