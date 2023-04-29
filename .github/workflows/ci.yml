@@ -25,11 +25,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - cmd: poetry run isort --check-only .
+          - cmd: poetry run isort --check-only **/*.py
             name: isort
-          - cmd: poetry run black --check .
+          - cmd: poetry run black --check **/*.py
             name: black
-          - cmd: poetry run pylint src/ *.py
+          - cmd: poetry run pylint **/*.py
             name: pylint
     steps:
       - name: Checkout the repository
