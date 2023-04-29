@@ -25,11 +25,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - cmd: poetry run isort --check-only ${{ steps.file_changes.outputs.files_modified }}
+          - cmd: poetry run isort --check-only
             name: isort
-          - cmd: poetry run black --check ${{ steps.file_changes.outputs.files_modified }}
+          - cmd: poetry run black --check
             name: black
-          - cmd: poetry run pylint ${{ steps.file_changes.outputs.files_modified }}
+          - cmd: poetry run pylint
             name: pylint
     steps:
       - name: Checkout the repository
@@ -59,7 +59,7 @@ jobs:
           then 
             echo "There are no modified Python files."
           else
-            ${{matrix.cmd}}
+            ${{matrix.cmd}} ${{ steps.file_changes.outputs.files_modified }}
           fi
 
       # - name: Checking with isort
