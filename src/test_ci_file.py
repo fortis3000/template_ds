@@ -1,4 +1,2 @@
-
 def test_ci_function():
-    print("TOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO long string")
-
+    print("Correct string")
