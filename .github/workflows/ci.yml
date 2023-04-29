@@ -26,8 +26,11 @@ jobs:
       matrix:
         include:
           - cmd: poetry run isort --check-only
+            name: isort
           - cmd: poetry run black --check
+            name: black
           - cmd: poetry run pylint
+            name: pylint
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -51,23 +54,7 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - continue-on-error: true
+      - name: ${{matrix.name}}
+      - continue-on-error: false
         run: |
             ${{matrix.cmd}} ${{ steps.file_changes.outputs.files_modified }}
-      
-      # - name: Linting summary
-      #   if: steps.isort.outcome != 'success' || steps.black.outcome != 'success' || steps.pylint.outcome != 'success'
-      #   run:
-      #     if [ "${{steps.isort.outcome}}" != "success" ]; then
-      #       echo "Linting with isort failed."
-      #     fi
-
-      #     if [ "${{steps.black.outcome}}" != "success" ]; then
-      #       echo "Linting with black failed."
-      #     fi
-
-      #     if [ "${{steps.pylint.outcome}}" != "success" ]; then
-      #       echo "Linting with pylint failed."
-      #     fi
-
-      #     exit 1
