@@ -15,7 +15,7 @@ permissions:
   pull-requests: read
 
 env:
-  PYTHON_VERSION: "3.10"
+  PYTHON_VERSION: "3.10.11"
   POETRY_VERSION: "1.4.2"
 
 jobs:
@@ -44,6 +44,7 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
+          cache: 'poetry'
 
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
@@ -55,7 +56,7 @@ jobs:
       - name: ${{matrix.name}}
         continue-on-error: true
         run: |
-          if [ ${{ steps.file_changes.outputs.files_modified }}[@] -eq 0 ]
+          if [ ${{ steps.file_changes.outputs.files_modified[@] }} -eq 0 ]
           then 
             echo "There are no modified Python files."
           else
