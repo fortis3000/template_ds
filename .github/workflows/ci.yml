@@ -43,14 +43,14 @@ jobs:
         run: poetry install --only codestyle
 
       - name: Checking with isort
-        run: poetry run isort --check-only  .
         continue-on-error: true
+        run: poetry run isort --check-only  .
 
       - name: Checking with black
-        run: poetry run black --check --config pyproject.toml .
         continue-on-error: true
+        run: poetry run black --check --config pyproject.toml .
 
-      - id: file_changes
+      - name: file_changes
         uses: trilom/file-changes-action@v1.2.4
 
       - name: List all changed files
@@ -60,6 +60,7 @@ jobs:
           done
 
       - name: Checking with pylint
+        continue-on-error: true
         run: |
           if [-z ${{ steps.file_changes.outputs.files_modified }}]
           then 
@@ -67,4 +68,3 @@ jobs:
           else
             poetry run pylint src/
           fi
-        continue-on-error: true
