@@ -2,37 +2,48 @@ name: 'CI'
 
 on:
   workflow_dispatch:
+  # workflow_call
   pull_request:
 
 permissions:
   contents: read
   # Needed for the 'trilom/file-changes-action' action
-  pull-requests: read
+ pull-requests: read
 
 # This allows a subsequently queued workflow run to interrupt previous runs
-concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
-  cancel-in-progress: true
+# concurrency:
+#   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+#   cancel-in-progress: true
+
+env:
+  POETRY_VERSION: 1.2.0
 
 jobs:
   isort_formatting:
     runs-on: ubuntu-22.04
     steps:
-      - name: List files in the repository
-        run: ls ${{ github.workspace }}
+      - name: Checkout the repository
       - uses: actions/checkout@v3
+
+      - name: Installing Python
       - uses: actions/setup-python@v4
-      - name: Run image
+
+      - name: Install poetry
         uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: 1.4.2
+        # with:
+        #   poetry-version: 1.4.2
+
       - name: poetry installation check
         run: poetry --version  
+
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
-      - name: checking with isort
+
+      - name: Checking with isort
         run: poetry run isort --check-only  .
-      - name: checking with black
+
+      - name: Checking with black
         run: poetry run black --check --config pyproject.toml .
-      - name: checking with pylint
+
+      - name: Checking with pylint
         run: poetry run pylint src/
