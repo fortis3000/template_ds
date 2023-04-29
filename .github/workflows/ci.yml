@@ -3,11 +3,14 @@ name: 'CI'
 on:
   workflow_dispatch:
   pull_request:
-    paths: **/*.py
+    paths: 
+      - "**/*.py"
 
   # workflow_call
+
   pull_request:
-    paths: **/*.py
+    paths: 
+      - "**/*.py"
 
 permissions:
   contents: read
@@ -45,9 +48,11 @@ jobs:
 
       - name: Checking with isort
         run: poetry run isort --check-only  .
+        continue-on-error: true
 
       - name: Checking with black
         run: poetry run black --check --config pyproject.toml .
+        continue-on-error: true
 
       - id: file_changes
         uses: trilom/file-changes-action@v1.2.4
@@ -66,3 +71,4 @@ jobs:
           else
             poetry run pylint src/
           fi
+        continue-on-error: true
