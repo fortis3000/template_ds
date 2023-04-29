@@ -35,6 +35,21 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
+      # early exit
+      - name: List of files changed
+        id: file_changes
+        uses: trilom/file-changes-action@v1.2.4
+        run:
+          if [ "${{ steps.file_changes.outputs.files_modified }}" = "[]" ]
+          then 
+            echo "There are no modified Python files."
+            echo "Exit sucessfully"
+            exit 0
+          else
+            echo "List of files changed:"
+            echo ${{ steps.file_changes.outputs.files_modified }}
+          fi
+
       - name: Installing Python
         uses: actions/setup-python@v4
         with:
@@ -49,19 +64,10 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - name: List of files changed
-        id: file_changes
-        uses: trilom/file-changes-action@v1.2.4
-
       - name: ${{matrix.name}}
         continue-on-error: true
         run: |
-          if [ "${{ steps.file_changes.outputs.files_modified }}" = "[]" ]
-          then 
-            echo "There are no modified Python files."
-          else
             ${{matrix.cmd}} ${{ steps.file_changes.outputs.files_modified }}
-          fi
 
       # - name: Checking with isort
       #   continue-on-error: true
