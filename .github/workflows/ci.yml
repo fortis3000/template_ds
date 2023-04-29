@@ -57,4 +57,9 @@ jobs:
       - name: ${{matrix.name}}
         continue-on-error: false
         run: |
+          if [ "${{ steps.file_changes.outputs.files_modified }}" = "[]" ]
+          then 
+            echo "There are no modified Python files."
+          else
             ${{matrix.cmd}} ${{ steps.file_changes.outputs.files_modified }}
+          fi
