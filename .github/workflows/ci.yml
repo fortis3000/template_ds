@@ -67,7 +67,7 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - id: ${{ matrix.name }}
+      - name: ${{ matrix.name }}
         continue-on-error: true
         run: |
             ${{matrix.cmd}} ${{ steps.file_changes.outputs.files_modified }}
