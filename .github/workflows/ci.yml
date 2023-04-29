@@ -4,10 +4,10 @@ name: 'CI'
 on:
   workflow_dispatch:
     paths: 
-      - '**/*.py'
+      - 'src/'
   pull_request:
     paths: 
-      - '**/*.py'
+      - 'src/'
 
 permissions:
   contents: read
@@ -63,5 +63,5 @@ jobs:
           then 
             echo "There are no modified Python files."
           else
-            ${{matrix.cmd}} ${{ steps.file_changes.outputs.files }}
+            ${{matrix.cmd}} 
           fi
