@@ -31,7 +31,6 @@ jobs:
             name: black
           - cmd: poetry run pylint ${{ steps.file_changes.outputs.files_modified }}
             name: pylint
-
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
