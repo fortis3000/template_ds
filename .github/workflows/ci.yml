@@ -24,34 +24,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: []
         include:
           - cmd: poetry run isort --check-only
-            name: isort
           - cmd: poetry run black --check
-            name: black
           - cmd: poetry run pylint
-            name: pylint
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      # early exit
+      # TODO: early exit
       - name: List of files changed
         id: file_changes
         uses: trilom/file-changes-action@v1.2.4
-        
-      - name: Check early exit
-        run: |
-          if [ "${{ steps.file_changes.outputs.files_modified }}" = "[]" ]
-          then 
-            echo "There are no modified Python files."
-            echo "Exit sucessfully."
-            exit 0
-          else
-            echo "List of files changed"
-            echo "${{ steps.file_changes.outputs.files_modified }}"
-          fi
 
       - name: Installing Python
         uses: actions/setup-python@v4
@@ -67,13 +51,12 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - name: ${{ matrix.name }}
-        continue-on-error: true
+      - continue-on-error: true
         run: |
             ${{matrix.cmd}} ${{ steps.file_changes.outputs.files_modified }}
       
       - name: Linting summary
-        if: steps.isort.outcome != "success" || steps.black.outcome != "success" || steps.pylint.outcome != "success"
+        if: steps.isort.outcome != 'success' || steps.black.outcome != 'success' || steps.pylint.outcome != 'success'
         run:
           if [ "${{steps.isort.outcome}}" != "success" ]; then
             echo "Linting with isort failed."
