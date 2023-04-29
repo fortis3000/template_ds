@@ -41,15 +41,15 @@ jobs:
         uses: trilom/file-changes-action@v1.2.4
         
       - name: Check early exit
-        run:
+        run: |
           if [ "${{ steps.file_changes.outputs.files_modified }}" = "[]" ]
           then 
             echo "There are no modified Python files."
-            echo "Exit sucessfully"
+            echo "Exit sucessfully."
             exit 0
           else
-            echo "List of files changed:"
-            echo ${{ steps.file_changes.outputs.files_modified }}
+            echo "List of files changed"
+            echo "${{ steps.file_changes.outputs.files_modified }}"
           fi
 
       - name: Installing Python
