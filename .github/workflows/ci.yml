@@ -1,0 +1,68 @@
+name: 'CI'
+
+# checking only .py file in the repo
+on:
+  workflow_dispatch:
+    paths: 
+      - "**/*.py"
+  pull_request:
+    paths: 
+      - "**/*.py"
+
+permissions:
+  contents: read
+  # Needed for the 'trilom/file-changes-action' action
+  pull-requests: read
+
+env:
+  PYTHON_VERSION: "3.10.11"
+  POETRY_VERSION: "1.4.2"
+
+jobs:
+  linting:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cmd: poetry run isort --check-only **/*.py
+            name: isort
+          - cmd: poetry run black --check **/*.py
+            name: black
+          - cmd: poetry run pylint **/*.py
+            name: pylint
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      # TODO: early exit
+      - name: List of files changed
+        id: file_changes
+        uses: trilom/file-changes-action@v1.2.4
+        with:
+          output: ''
+
+      - name: Installing Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+          cache: 'poetry'
+
+      - name: Install codestyle dependencies
+        run: poetry install --only codestyle
+
+      # TODO: add chaned files only
+      - name: ${{matrix.name}}
+        continue-on-error: false
+        run: |
+          if [ "${{ steps.file_changes.outputs.files }}" = "[]" ]
+          then 
+            echo "There are no modified Python files."
+          else
+            ${{matrix.cmd}}
+          fi
