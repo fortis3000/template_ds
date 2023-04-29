@@ -5,9 +5,11 @@ on:
   workflow_dispatch:
     paths: 
       - "**/*.py"
+      - "*.py"
   pull_request:
     paths: 
       - "**/*.py"
+      - "*.py"
 
 permissions:
   contents: read
