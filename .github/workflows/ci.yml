@@ -1,5 +1,6 @@
 name: 'CI'
 
+# checking only .py file in the repo
 on:
   workflow_dispatch:
     paths: 
@@ -13,14 +14,9 @@ permissions:
   # Needed for the 'trilom/file-changes-action' action
   pull-requests: read
 
-# This allows a subsequently queued workflow run to interrupt previous runs
-concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
-  cancel-in-progress: true
-
 env:
   PYTHON_VERSION: "3.10"
-  POETRY_VERSION: "1.4.0"
+  POETRY_VERSION: "1.4.2"
 
 jobs:
   linting:
@@ -34,27 +30,21 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Python installation check
-        run: pip --version
-
       - name: Install poetry
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-
-      - name: Poetry installation check
-        run: poetry --version  
 
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
       - name: Checking with isort
         continue-on-error: true
-        run: poetry run isort --check-only  .
+        run: poetry run isort --check-only .
 
       - name: Checking with black
         continue-on-error: true
-        run: poetry run black --check --config pyproject.toml .
+        run: poetry run black --check .
 
       - name: file_changes
         uses: trilom/file-changes-action@v1.2.4
@@ -72,5 +62,5 @@ jobs:
           then 
             echo "There are no modified Python files."
           else
-            poetry run pylint src/
+            poetry run pylint ${{ steps.file_changes.outputs.files_modified }}
           fi
