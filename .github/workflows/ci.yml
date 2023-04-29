@@ -66,25 +66,13 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - name: ${{matrix.name}}
+      - id: ${{matrix.name}}
         continue-on-error: true
         run: |
             ${{matrix.cmd}} ${{ steps.file_changes.outputs.files_modified }}
-
-      # - name: Checking with isort
-      #   continue-on-error: true
-      #   run: poetry run isort --check-only .
-
-      # - name: Checking with black
-      #   continue-on-error: true
-      #   run: poetry run black --check .
-
-      # - name: Checking with pylint
-      #   continue-on-error: true
-      #   run: |
-      #     if [ -z ${{ steps.file_changes.outputs.files_modified }} ]
-      #     then 
-      #       echo "There are no modified Python files."
-      #     else
-      #       poetry run pylint ${{ steps.file_changes.outputs.files_modified }}
-      #     fi
+      
+      - name: Linting summary
+        if: steps.${{matrix.name}}.outcome != "success"
+        run:
+          echo "Linting with ${{matrix.name}} failed."
+          exit 1
