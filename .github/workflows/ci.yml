@@ -19,6 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  PYTHON_VERSION: 3.10
   POETRY_VERSION: 1.2.0
 
 jobs:
@@ -30,13 +31,18 @@ jobs:
 
       - name: Installing Python
         uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.python-version }}
+
+      - name: Python installation check
+        run: pip --version
 
       - name: Install poetry
         uses: abatilo/actions-poetry@v2
-        # with:
-        #   poetry-version: 1.4.2
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
 
-      - name: poetry installation check
+      - name: Poetry installation check
         run: poetry --version  
 
       - name: Install codestyle dependencies
@@ -59,12 +65,12 @@ jobs:
             echo "$file was changed"
           done
 
-      # - name: Checking with pylint
-      #   continue-on-error: true
-      #   run: |
-      #     if [ -z ${{ steps.file_changes.outputs.files_modified }} ]
-      #     then 
-      #       echo "There are no modified Python files."
-      #     else
-      #       poetry run pylint src/
-      #     fi
+      - name: Checking with pylint
+        continue-on-error: true
+        run: |
+          if [ -z ${{ steps.file_changes.outputs.files_modified }} ]
+          then 
+            echo "There are no modified Python files."
+          else
+            poetry run pylint src/
+          fi
