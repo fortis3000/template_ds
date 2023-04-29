@@ -64,7 +64,7 @@ jobs:
         run: |
           if [-z ${{ steps.file_changes.outputs.files_modified }}]
           then 
-          echo "There are no modified Python files."
+            echo "There are no modified Python files."
           else
             poetry run pylint src/
           fi
