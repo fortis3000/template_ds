@@ -22,14 +22,14 @@ env:
   POETRY_VERSION: 1.2.0
 
 jobs:
-  isort_formatting:
+  linting:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Installing Python
-      - uses: actions/setup-python@v4
+        uses: actions/setup-python@v4
 
       - name: Install poetry
         uses: abatilo/actions-poetry@v2
@@ -59,12 +59,12 @@ jobs:
             echo "$file was changed"
           done
 
-      - name: Checking with pylint
-        continue-on-error: true
-        run: |
-          if [-z ${{ steps.file_changes.outputs.files_modified }}]
-          then 
-            echo "There are no modified Python files."
-          else
-            poetry run pylint src/
-          fi
+      # - name: Checking with pylint
+      #   continue-on-error: true
+      #   run: |
+      #     if [ -z ${{ steps.file_changes.outputs.files_modified }} ]
+      #     then 
+      #       echo "There are no modified Python files."
+      #     else
+      #       poetry run pylint src/
+      #     fi
