@@ -55,6 +55,6 @@ jobs:
         run: poetry install --only codestyle
 
       - name: ${{matrix.name}}
-      - continue-on-error: false
+        continue-on-error: false
         run: |
             ${{matrix.cmd}} ${{ steps.file_changes.outputs.files_modified }}
