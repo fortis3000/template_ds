@@ -4,12 +4,10 @@ name: 'CI'
 on:
   workflow_dispatch:
     paths: 
-      - "src/**"
-      - "*.py"
+      - "**/*.py"
   pull_request:
     paths: 
-      - "src/"
-      - "*.py"
+      - "**/*.py"
 
 permissions:
   contents: read
@@ -58,6 +56,7 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
+      # TODO: add chaned files only
       - name: ${{matrix.name}}
         continue-on-error: false
         run: |
@@ -65,5 +64,5 @@ jobs:
           then 
             echo "There are no modified Python files."
           else
-            ${{matrix.cmd}} 
+            ${{matrix.cmd}}
           fi
