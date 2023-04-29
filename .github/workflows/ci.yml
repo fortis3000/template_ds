@@ -21,6 +21,17 @@ env:
 jobs:
   linting:
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cmd: poetry run isort --check-only ${{ steps.file_changes.outputs.files_modified }}
+            name: isort
+          - cmd: poetry run black --check ${{ steps.file_changes.outputs.files_modified }}
+            name: black
+          - cmd: poetry run pylint ${{ steps.file_changes.outputs.files_modified }}
+            name: pylint
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -38,29 +49,34 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - name: Checking with isort
-        continue-on-error: true
-        run: poetry run isort --check-only .
-
-      - name: Checking with black
-        continue-on-error: true
-        run: poetry run black --check .
-
-      - name: file_changes
+      - name: List of files changed
+        id: file_changes
         uses: trilom/file-changes-action@v1.2.4
 
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.file_changes.outputs.files_modified }}; do
-            echo "$file was changed"
-          done
-
-      - name: Checking with pylint
+      - name: ${{matrix.name}}
         continue-on-error: true
         run: |
           if [ -z ${{ steps.file_changes.outputs.files_modified }} ]
           then 
             echo "There are no modified Python files."
           else
-            poetry run pylint ${{ steps.file_changes.outputs.files_modified }}
+            ${{matrix.cmd}}
           fi
+
+      # - name: Checking with isort
+      #   continue-on-error: true
+      #   run: poetry run isort --check-only .
+
+      # - name: Checking with black
+      #   continue-on-error: true
+      #   run: poetry run black --check .
+
+      # - name: Checking with pylint
+      #   continue-on-error: true
+      #   run: |
+      #     if [ -z ${{ steps.file_changes.outputs.files_modified }} ]
+      #     then 
+      #       echo "There are no modified Python files."
+      #     else
+      #       poetry run pylint ${{ steps.file_changes.outputs.files_modified }}
+      #     fi
