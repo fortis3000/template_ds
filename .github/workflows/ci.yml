@@ -4,12 +4,9 @@ on:
   workflow_dispatch:
     paths: 
       - "**/*.py"
-
   pull_request:
     paths: 
       - "**/*.py"
-
-  # workflow_call
 
 permissions:
   contents: read
