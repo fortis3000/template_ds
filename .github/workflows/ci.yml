@@ -78,6 +78,6 @@ jobs:
 
       - name: Check all steps
         shell: bash
-        if: step.isort.outcome != 'success'  || step.black.outcome != 'success' || step.pylint.outcome != 'success'
+        if: steps.isort.outcome != 'success'  || steps.black.outcome != 'success' || steps.pylint.outcome != 'success'
         run: |
           exit 1
