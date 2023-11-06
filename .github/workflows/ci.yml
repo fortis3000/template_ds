@@ -66,4 +66,11 @@ jobs:
         id: pylint
         run: |
           poetry run python -m pylint --version
-          poetry run python -m pylint "${{ steps.changed-files.outputs.all_changed_files }}"
+          
+          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "[]" ]
+          then 
+            echo "There are no modified Python files."
+            exit 0;
+          else
+            poetry run python -m pylint "${{ steps.changed-files.outputs.all_changed_files }}"
+          fi
