@@ -1,12 +1,6 @@
 name: 'Linting'
 
-# checking only .py file in the repo
 on: push
-
-permissions:
-  contents: read
-  # Needed for the 'trilom/file-changes-action' action
-  pull-requests: read
 
 env:
   PYTHON_VERSION: "3.11"
@@ -15,27 +9,28 @@ env:
 jobs:
   linting:
     runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - cmd: poetry run python -m isort --check-only .
-            name: isort
-          - cmd: poetry run python -m black .
-            name: black
-          - cmd: poetry run python -m pylint .
-            name: pylint
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      # TODO: early exit
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v40
         with:
           files: |
             **.py
+
+      - name: Early exit
+        continue-on-error: true
+        run: |
+          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "[]" ]
+          then 
+            echo "There are no modified Python files."
+            exit 0;
+          else
+            echo "Python files discovered, starting a job."
+          fi
 
       - name: Installing Python
         uses: actions/setup-python@v4
@@ -51,12 +46,24 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - name: ${{matrix.name}}
-        continue-on-error: false
+      - name: Checking the order of imports
+        shell: bash
+        id: isort
+        continue-on-error: true
         run: |
-          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "[]" ]
-          then 
-            echo "There are no modified Python files."
-          else
-            ${{matrix.cmd}}
-          fi
+          python -m isort --version
+          python -m isort -v --settings-file ./pyproject.toml .
+
+      - name: Checking formatting with black
+        shell: bash
+        id: black
+        run: |
+          python -m black --version
+          python -m python -m black -v .
+
+      - name: Linting with pylint
+        shell: bash
+        id: pylint
+        run: |
+          python -m pylint --version
+          python -m python -m pylint "${{ steps.changed-files.outputs.all_changed_files }}"
