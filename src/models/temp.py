@@ -1,5 +1,6 @@
-import pandas as pd
 import os
 
-if __name__ == '__main__':
-    print('Error')
+if __name__ == "__main__":
+    os.listdir(".")
+
+    print("Error")
