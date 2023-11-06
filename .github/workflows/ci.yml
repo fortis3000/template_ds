@@ -1,46 +1,25 @@
-name: 'CI'
+name: 'Linting'
 
-# checking only .py file in the repo
-on:
-  workflow_dispatch:
-    paths: 
-      - "**/*.py"
-  pull_request:
-    paths: 
-      - "**/*.py"
-
-permissions:
-  contents: read
-  # Needed for the 'trilom/file-changes-action' action
-  pull-requests: read
+on: push
 
 env:
-  PYTHON_VERSION: "3.10.11"
-  POETRY_VERSION: "1.4.2"
+  PYTHON_VERSION: "3.11"
+  POETRY_VERSION: "1.7.0"
 
 jobs:
   linting:
     runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - cmd: poetry run isort --check-only **/*.py
-            name: isort
-          - cmd: poetry run black --check **/*.py
-            name: black
-          - cmd: poetry run pylint **/*.py
-            name: pylint
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      # TODO: early exit
-      - name: List of files changed
-        id: file_changes
-        uses: trilom/file-changes-action@v1.2.4
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
         with:
-          output: ''
+          files: |
+            **.py
 
       - name: Installing Python
         uses: actions/setup-python@v4
@@ -56,13 +35,51 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      # TODO: add chaned files only
-      - name: ${{matrix.name}}
-        continue-on-error: false
+      - name: Checking the order of imports with isort
+        shell: bash
+        id: isort
+        continue-on-error: true
         run: |
-          if [ "${{ steps.file_changes.outputs.files }}" = "[]" ]
+          poetry run python -m isort --version
+          poetry run python -m isort --settings-file ./pyproject.toml --check .
+
+      - name: Checking formatting with black
+        shell: bash
+        id: black
+        continue-on-error: true
+        run: |
+          poetry run python -m black --version
+          poetry run python -m black --check .
+
+      - name: Linting with pylint
+        shell: bash
+        id: pylint
+        continue-on-error: true
+        run: |
+          poetry run python -m pylint --version
+          
+          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "" ]
           then 
             echo "There are no modified Python files."
+            exit 0;
           else
-            ${{matrix.cmd}}
+            poetry run python -m pylint "${{ steps.changed-files.outputs.all_changed_files }}"
           fi
+
+      - name: Check all steps
+        shell: bash
+        if: steps.isort.outcome != 'success'  || steps.black.outcome != 'success' || steps.pylint.outcome != 'success'
+        run: |
+          if [ "$steps.isort.outcome" != "success" ]; then
+            echo "Sorting imports with isort failed."
+          fi
+          
+          if [ "$steps.black.outcome" != "success" ]; then
+            echo "Formatting with black failed."
+          fi
+          
+          if [ "$steps.pylint.outcome" != "success" ]; then
+            echo "Linting with pylint failed."
+          fi
+
+          exit 1
