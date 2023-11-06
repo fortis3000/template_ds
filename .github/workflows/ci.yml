@@ -24,7 +24,7 @@ jobs:
       - name: Early exit
         continue-on-error: true
         run: |
-          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "[]" ]
+          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "" ]
           then 
             echo "There are no modified Python files."
             exit 0;
@@ -46,7 +46,7 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - name: Checking the order of imports
+      - name: Checking the order of imports with isort
         shell: bash
         id: isort
         continue-on-error: true
@@ -65,12 +65,12 @@ jobs:
         shell: bash
         id: pylint
         run: |
-          poetry run pylint --version
+          poetry run python -m pylint --version
           
-          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "[]" ]
+          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "" ]
           then 
             echo "There are no modified Python files."
             exit 0;
           else
-            poetry run pylint "${{ steps.changed-files.outputs.all_changed_files }}"
+            poetry run python -m pylint "${{ steps.changed-files.outputs.all_changed_files }}"
           fi
