@@ -123,6 +123,19 @@ The recommended way to install poetry and aviod additional issues is to install 
 6. Enjoy coding :)
 
 ## Best practices
-TO BE DONE
+
 ### Makefile
+Codestyle functionality could be applied locally using the Makefile created and the following command:
+
+```bash
+make precommit
+```
+
+or using `.sh` file directly:
+
+```bash
+bash ./precommit.sh
+```
+
 ### Cli with typer
+TO BE DONE
