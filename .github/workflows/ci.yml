@@ -21,17 +21,17 @@ jobs:
           files: |
             **.py
 
-      - name: Early exit
-        continue-on-error: false
-        run: |
-          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "" ]
-          then 
-            echo "There are no modified Python files. Exit."
-            exit 1
-          else
-            echo "Python files discovered, starting a job."
-            echo "${{ steps.changed-files.outputs.all_changed_files }}"
-          fi
+#      - name: Early exit
+#        continue-on-error: false
+#        run: |
+#          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "" ]
+#          then
+#            echo "There are no modified Python files. Exit."
+#            exit 1
+#          else
+#            echo "Python files discovered, starting a job."
+#            echo "${{ steps.changed-files.outputs.all_changed_files }}"
+#          fi
 
       - name: Installing Python
         uses: actions/setup-python@v4
