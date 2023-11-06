@@ -51,19 +51,19 @@ jobs:
         id: isort
         continue-on-error: true
         run: |
-           isort --version
-           isort -v --settings-file ./pyproject.toml .
+          poetry run python -m isort --version
+          poetry run python -m isort -v --settings-file ./pyproject.toml .
 
       - name: Checking formatting with black
         shell: bash
         id: black
         run: |
-           black --version
-           black -v .
+          poetry run python -m black --version
+          poetry run python -m black -v .
 
       - name: Linting with pylint
         shell: bash
         id: pylint
         run: |
-           pylint --version
-           pylint "${{ steps.changed-files.outputs.all_changed_files }}"
+          poetry run python -m pylint --version
+          poetry run python -m pylint "${{ steps.changed-files.outputs.all_changed_files }}"
