@@ -70,4 +70,16 @@ jobs:
         shell: bash
         if: steps.isort.outcome != 'success'  || steps.black.outcome != 'success' || steps.pylint.outcome != 'success'
         run: |
+          if [ "$steps.isort.outcome" != "success" ]; then
+            echo "Sorting imports with isort failed."
+          fi
+          
+          if [ "$steps.black.outcome" != "success" ]; then
+            echo "Formatting with black failed."
+          fi
+          
+          if [ "$steps.pylint.outcome" != "success" ]; then
+            echo "Linting with pylint failed."
+          fi
+
           exit 1
