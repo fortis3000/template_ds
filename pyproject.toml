@@ -2,7 +2,7 @@
 name = "DS project"
 version = "0.0.1"
 description = ""
-authors = [""]
+authors = ["Mikhail S. <fortis3000@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
