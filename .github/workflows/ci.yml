@@ -53,14 +53,14 @@ jobs:
         continue-on-error: true
         run: |
           poetry run python -m isort --version
-          poetry run python -m isort -v --settings-file ./pyproject.toml --check-only --diff .
+          poetry run python -m isort --settings-file ./pyproject.toml --check-only --diff .
 
       - name: Checking formatting with black
         shell: bash
         id: black
         run: |
           poetry run python -m black --version
-          poetry run python -m black -v --check .
+          poetry run python -m black --check .
 
       - name: Linting with pylint
         shell: bash
