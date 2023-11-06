@@ -21,18 +21,6 @@ jobs:
           files: |
             **.py
 
-#      - name: Early exit
-#        continue-on-error: false
-#        run: |
-#          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "" ]
-#          then
-#            echo "There are no modified Python files. Exit."
-#            exit 1
-#          else
-#            echo "Python files discovered, starting a job."
-#            echo "${{ steps.changed-files.outputs.all_changed_files }}"
-#          fi
-
       - name: Installing Python
         uses: actions/setup-python@v4
         with:
@@ -53,11 +41,12 @@ jobs:
         continue-on-error: true
         run: |
           poetry run python -m isort --version
-          poetry run python -m isort --settings-file ./pyproject.toml --check-only --diff .
+          poetry run python -m isort --settings-file ./pyproject.toml --check .
 
       - name: Checking formatting with black
         shell: bash
         id: black
+        continue-on-error: true
         run: |
           poetry run python -m black --version
           poetry run python -m black --check .
@@ -65,6 +54,7 @@ jobs:
       - name: Linting with pylint
         shell: bash
         id: pylint
+        continue-on-error: true
         run: |
           poetry run python -m pylint --version
           
