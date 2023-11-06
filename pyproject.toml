@@ -31,4 +31,4 @@ extend-exclude = '''
 profile = "black"
 line_length = 88
 src_paths = ["src", "tests"]
-#honor_noqa = true
+honor_noqa = true
