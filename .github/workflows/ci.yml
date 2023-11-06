@@ -1,13 +1,7 @@
-name: 'CI'
+name: 'Linting'
 
 # checking only .py file in the repo
-on:
-  workflow_dispatch:
-    paths: 
-      - "**/*.py"
-  pull_request:
-    paths: 
-      - "**/*.py"
+on: push
 
 permissions:
   contents: read
@@ -15,8 +9,8 @@ permissions:
   pull-requests: read
 
 env:
-  PYTHON_VERSION: "3.10.11"
-  POETRY_VERSION: "1.4.2"
+  PYTHON_VERSION: "3.11"
+  POETRY_VERSION: "1.7.0"
 
 jobs:
   linting:
@@ -25,22 +19,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - cmd: poetry run isort --check-only **/*.py
+          - cmd: poetry run python -m isort --check-only .
             name: isort
-          - cmd: poetry run black --check **/*.py
+          - cmd: poetry run python -m black .
             name: black
-          - cmd: poetry run pylint **/*.py
+          - cmd: poetry run python -m pylint .
             name: pylint
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
       # TODO: early exit
-      - name: List of files changed
-        id: file_changes
-        uses: trilom/file-changes-action@v1.2.4
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
         with:
-          output: ''
+          files: |
+            **.py
 
       - name: Installing Python
         uses: actions/setup-python@v4
@@ -56,11 +51,10 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      # TODO: add chaned files only
       - name: ${{matrix.name}}
         continue-on-error: false
         run: |
-          if [ "${{ steps.file_changes.outputs.files }}" = "[]" ]
+          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "[]" ]
           then 
             echo "There are no modified Python files."
           else
