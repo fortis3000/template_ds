@@ -22,12 +22,12 @@ jobs:
             **.py
 
       - name: Early exit
-        continue-on-error: true
+        continue-on-error: false
         run: |
           if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "" ]
           then 
             echo "There are no modified Python files. Exit."
-            exit 0
+            exit 1
           else
             echo "Python files discovered, starting a job."
             echo "${{ steps.changed-files.outputs.all_changed_files }}"
@@ -53,14 +53,14 @@ jobs:
         continue-on-error: true
         run: |
           poetry run python -m isort --version
-          poetry run python -m isort -v --settings-file ./pyproject.toml .
+          poetry run python -m isort -v --settings-file ./pyproject.toml --check-only --diff .
 
       - name: Checking formatting with black
         shell: bash
         id: black
         run: |
           poetry run python -m black --version
-          poetry run python -m black -v .
+          poetry run python -m black -v --check .
 
       - name: Linting with pylint
         shell: bash
