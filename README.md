@@ -85,20 +85,8 @@ The main idea is to make code style checking:
 - Modular. In future it is possible to change some parts of the code style suite without affecting other parts, e.g. pylint -> ruff, isort -> reorder-python-imports etc.
 - Separate from dev, test, prod and other environments. The linting and formatting tool are used only on checking stage and are redundant for other Docker images.
 
-To apply code style suite easily, use `make precommit` command. You can find a set of commands in `Makefile`.
-
-The current code style suite includes following stages:
-
-#### isort
-Use [isort](https://pycqa.github.io/isort/) to keep your imports in order. The library takes its configuration from `pyproject.toml`, section `[tool.isort]`
-
-#### black
-Use [black](https://github.com/psf/black) formatter for stable code formatting rules. The library takes its configuration from `pyproject.toml`, section `[tool.black]`
-
-#### pylint
-Use [pylint](https://pypi.org/project/pylint/) to analyse your Python code.
-
-Note that pylint keeps its configurations in separate file `.pylinrc`. For more convinience the general template of this file was added to the project template.
+#### Ruff linting and formatting
+Both for code linting and formatting Ruff package is proposed to use. See [here](https://docs.astral.sh/ruff/) for more details.
 
 ### CI/CD: GitHub Actions
 
