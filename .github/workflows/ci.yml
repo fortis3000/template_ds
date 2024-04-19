@@ -35,51 +35,30 @@ jobs:
       - name: Install codestyle dependencies
         run: poetry install --only codestyle
 
-      - name: Checking the order of imports with isort
+      - name: Checking linting with ruff
         shell: bash
-        id: isort
-        continue-on-error: true
+        id: ruff-linting
         run: |
-          poetry run python -m isort --version
-          poetry run python -m isort --settings-file ./pyproject.toml --check .
-
-      - name: Checking formatting with black
+          poetry run ruff --version
+          poetry run ruff check .
+      
+      - name: Checking formatting with ruff
         shell: bash
-        id: black
-        continue-on-error: true
+        id: ruff-format
         run: |
-          poetry run python -m black --version
-          poetry run python -m black --check .
-
-      - name: Linting with pylint
-        shell: bash
-        id: pylint
-        continue-on-error: true
-        run: |
-          poetry run python -m pylint --version
-          
-          if [ "${{ steps.changed-files.outputs.all_changed_files }}" = "" ]
-          then 
-            echo "There are no modified Python files."
-            exit 0;
-          else
-            poetry run python -m pylint "${{ steps.changed-files.outputs.all_changed_files }}"
-          fi
-
+          poetry run ruff --version
+          poetry run ruff format --check .
+      
       - name: Check all steps
         shell: bash
-        if: steps.isort.outcome != 'success'  || steps.black.outcome != 'success' || steps.pylint.outcome != 'success'
+        if: steps.ruff-linting.outcome != 'success'  || steps.ruff-format.outcome != 'success'
         run: |
-          if [ "$steps.isort.outcome" != "success" ]; then
+          if [ "$steps.ruff-linting.outcome" != "success" ]; then
             echo "Sorting imports with isort failed."
           fi
           
-          if [ "$steps.black.outcome" != "success" ]; then
+          if [ "$steps.ruff-format.outcome" != "success" ]; then
             echo "Formatting with black failed."
-          fi
-          
-          if [ "$steps.pylint.outcome" != "success" ]; then
-            echo "Linting with pylint failed."
           fi
 
           exit 1
