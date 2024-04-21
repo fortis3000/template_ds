@@ -3,7 +3,7 @@
 requires = ["setuptools", "wheel"]  # PEP 508 specifications.
 
 [project]
-name = "DS project"
+name = "DS_project"
 version = "0.0.1"
 description = ""
 authors = ["Mikhail S. <fortis3000@gmail.com>"]
