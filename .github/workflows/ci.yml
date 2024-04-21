@@ -36,7 +36,6 @@ jobs:
         id: uv-install
         run: |
           uv --version
-          uv pip install ruff
           uv pip compile pyproject.toml -o requirements.txt
       
       - name: Install environment
