@@ -31,14 +31,15 @@ jobs:
         with:
           uv-venv: "dev_env"
       
-      - name: Compile and install environment
+      - name: Compile environment
         shell: bash
         id: uv-install
         run: |
           uv --version
           uv pip install ruff
+          uv pip compile pyproject.toml -o requirements.txt
       
-      - name: Compile and install environment
+      - name: Install environment
         shell: bash
         id: uv-env-install
         run: uv pip sync requirements.txt
