@@ -1,4 +1,8 @@
-[tool.poetry]
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = ["setuptools", "wheel"]  # PEP 508 specifications.
+
+[project]
 name = "DS project"
 version = "0.0.1"
 description = ""
