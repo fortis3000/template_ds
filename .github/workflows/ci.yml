@@ -33,11 +33,13 @@ jobs:
       
       - name: Compile and install environment
         shell: bash
-        id: uv
-        run: |
-          uv --version
-          uv pip compile pyproject.toml -o requirements.txt
-          uv pip sync requirements.txt
+        id: uv-install
+        run: uv pip compile pyproject.toml -o requirements.txt
+      
+      - name: Compile and install environment
+        shell: bash
+        id: uv-env-install
+        run: uv pip sync requirements.txt
 
       - name: Checking linting with ruff
         shell: bash
