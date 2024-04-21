@@ -1,1 +1,1 @@
-print ( 'Hello error' )
+print("Hello error")
