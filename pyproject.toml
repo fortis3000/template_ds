@@ -4,12 +4,10 @@ version = "0.0.1"
 description = ""
 authors = ["Mikhail S. <fortis3000@gmail.com>"]
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-
-[tool.poetry.group.codestyle.dependencies]
-ruff = "0.4.1"
+requires-python = "^3.11"
+dependencies = [
+  "ruff==0.4.1"
+]
 
 [tool.ruff]
 # Formatting
