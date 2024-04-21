@@ -26,28 +26,24 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+      - name: Install uv
+        uses: yezz123/setup-uv@v4
         with:
-          poetry-version: ${{ env.POETRY_VERSION }}
-          cache: 'poetry'
-
-      - name: Install codestyle dependencies
-        run: poetry install --only codestyle
+          uv-venv: "dev_env"
+        run: |
+          uv --version
+          uv pip compile pyproject.toml -o requirements.txt
+          uv pip sync requirements.txt
 
       - name: Checking linting with ruff
         shell: bash
         id: ruff-linting
-        run: |
-          poetry run ruff --version
-          poetry run ruff check .
+        run: ruff check .
       
       - name: Checking formatting with ruff
         shell: bash
         id: ruff-format
-        run: |
-          poetry run ruff --version
-          poetry run ruff format --check .
+        run: ruff format --check .
       
       - name: Check all steps
         shell: bash
