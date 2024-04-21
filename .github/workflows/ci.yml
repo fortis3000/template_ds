@@ -32,6 +32,8 @@ jobs:
           uv-venv: "dev_env"
       
       - name: Compile and install environment
+        shell: bash
+        id: uv
         run: |
           uv --version
           uv pip compile pyproject.toml -o requirements.txt
