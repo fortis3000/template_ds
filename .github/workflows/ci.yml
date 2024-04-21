@@ -30,6 +30,8 @@ jobs:
         uses: yezz123/setup-uv@v4
         with:
           uv-venv: "dev_env"
+      
+      - name: Compile and install environment
         run: |
           uv --version
           uv pip compile pyproject.toml -o requirements.txt
