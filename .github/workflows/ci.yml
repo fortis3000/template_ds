@@ -3,12 +3,12 @@ name: 'Linting'
 on: push
 
 env:
-  PYTHON_VERSION: "3.11"
+  PYTHON_VERSION: "3.12"
   POETRY_VERSION: "1.7.0"
 
 jobs:
   linting:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout the repository
@@ -26,28 +26,32 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+      - name: Install uv
+        uses: yezz123/setup-uv@v4
         with:
-          poetry-version: ${{ env.POETRY_VERSION }}
-          cache: 'poetry'
-
-      - name: Install codestyle dependencies
-        run: poetry install --only codestyle
+          uv-venv: "dev_env"
+      
+      - name: Compile environment
+        shell: bash
+        id: uv-install
+        run: |
+          uv --version
+          uv pip compile pyproject.toml --extra lint -o requirements.txt
+      
+      - name: Install environment
+        shell: bash
+        id: uv-env-install
+        run: uv pip sync requirements.txt
 
       - name: Checking linting with ruff
         shell: bash
         id: ruff-linting
-        run: |
-          poetry run ruff --version
-          poetry run ruff check .
+        run: ruff check ${{ steps.changed-files.outputs.all_changed_files }}
       
       - name: Checking formatting with ruff
         shell: bash
         id: ruff-format
-        run: |
-          poetry run ruff --version
-          poetry run ruff format --check .
+        run: ruff format --check ${{ steps.changed-files.outputs.all_changed_files }}
       
       - name: Check all steps
         shell: bash
