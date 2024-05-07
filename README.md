@@ -49,11 +49,6 @@ Project Organization
 
 --------
 
-
-
-====
-
-## Concept
 ## Goals
 - Reduce time to establish a repo specifically for DS needs.
 - To align data scientists in terms of skills and tools used.
@@ -63,34 +58,64 @@ Project Organization
 
 ### Project structure
 
-The current architecture is based on [Cookicutter DS](https://github.com/drivendata/cookiecutter-data-science) appoach. The reasoning behind it you can find [here](http://drivendata.github.io/cookiecutter-data-science/).
+The current architecture is based on [Cookiecutter DS](https://github.com/drivendata/cookiecutter-data-science) approach. The reasoning behind it you can find [here](http://drivendata.github.io/cookiecutter-data-science/).
 
 ### Code versioning tools
 To track, keep and share your codings [git](https://git-scm.com/) and [GitHub](https://github.com/) services are required.
 
 ### Default programming language
-To leverage modern programming stack it is recommended to start with [Python 3.10](https://www.python.org/downloads/release/python-3100/) as default.
+To leverage modern programming stack it is recommended to start with [Python 3.12](https://www.python.org/downloads/release/python-3120/) as default.
 
 ### Dependency management
-To follow Single-Source-Of-Truth concept it makes sense to use `pyproject.toml` to store project configuration. `pyproject.toml` configuration file allows to use the same configuration on different project steps: CI/CD, dev, test, prod etc.
+To follow Single-Source-Of-Truth concept it makes sense to use [pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) to store project configuration. `pyproject.toml` configuration file allows to use the same configuration on different project steps: CI/CD, dev, test, prod etc.
 
+#### uv
+Newly announced [uv tool](https://github.com/astral-sh/uv).
+
+To create new virtual environment:
+```bash
+uv venv -p 3.12
+```
+
+You might need to install or provide path to python 3.12 first.
+
+Activate an environment on macOS and Linux:
+```bash
+source .venv/bin/activate
+```
+
+On Windows:
+```shell
+.venv\Scripts\activate
+```
+
+To build an requirements file from `pyproject.toml` use the following command: 
+```bash
+uv pip compile pyproject.toml --extra dev --extra lint -o requirements.txt
+```
+
+To install compiled file:
+```bash
+uv pip sync requirements.txt
+```
+
+#### Poetry
 To manage Python dependencies using the same file we can use [poetry](https://python-poetry.org/).
 
-
-### Codestyle: isort, black, pylint
-
-The main idea is to make code style checking:
-
-- Sufficient. Different parts of the code style suite are responsible for different code characteristics and neither of them can substituite all of them.
-- Modular. In future it is possible to change some parts of the code style suite without affecting other parts, e.g. pylint -> ruff, isort -> reorder-python-imports etc.
-- Separate from dev, test, prod and other environments. The linting and formatting tool are used only on checking stage and are redundant for other Docker images.
-
-#### Ruff linting and formatting
+### Codestyle: ruff
 Both for code linting and formatting Ruff package is proposed to use. See [here](https://docs.astral.sh/ruff/) for more details.
+
+Commands:
+```bash
+ruff format . --config pyproject.toml
+ruff check .  --config pyproject.toml
+
+ruff check . --fix
+```
 
 ### CI/CD: GitHub Actions
 
-As a baseline, CI with integrated code style is provided (see `.github/workflows/ci.yml`). The current setup is based on using public Actions and configurating CI with `pyproject.toml` file. It is also possible to use corporate Actions.
+As a baseline, CI with integrated code style is provided (see `.github/workflows/ci.yml`). The current setup is based on using public Actions and configuring CI with `pyproject.toml` file. It is also possible to use custom Actions.
 
 ### Test suite:
 TO BE DONE (pytest)
@@ -101,13 +126,14 @@ TO BE DONE (pytest)
 
 While creating repo, choose the current one as a template. Check [tutorial](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository) for more details.
 
-2. Install poetry
+It is also possible to use this repository as a template in GitHub interface.
 
-The recommended way to install poetry and aviod additional issues is to install it with pip. Check the [link](https://python-poetry.org/docs/#installing-manually) for exact commands. In CI it is possible to use [poetry Action](https://github.com/marketplace/actions/python-poetry-action)
+2. Install, compile and activate virtual environment
+See [uv](#uv)
 
 3. Change parameters `pyproject.toml` if needed.
-4. Put you source code in `src` folder.
-5. Tweak CI configuration `.github/workflows/ci.yml` if needed.
+4. Tweak CI configuration `.github/workflows/ci.yml` if needed.
+5. Put you source code in `src` folder.
 6. Enjoy coding :)
 
 ## Best practices
