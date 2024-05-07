@@ -36,7 +36,7 @@ jobs:
         id: uv-install
         run: |
           uv --version
-          uv pip compile pyproject.toml -o requirements.txt
+          uv pip compile pyproject.toml --extra lint -o requirements.txt
       
       - name: Install environment
         shell: bash
