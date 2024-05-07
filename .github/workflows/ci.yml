@@ -8,7 +8,7 @@ env:
 
 jobs:
   linting:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout the repository
@@ -46,12 +46,12 @@ jobs:
       - name: Checking linting with ruff
         shell: bash
         id: ruff-linting
-        run: ruff check .
+        run: ruff check ${{ steps.changed-files.outputs.all_changed_files }}
       
       - name: Checking formatting with ruff
         shell: bash
         id: ruff-format
-        run: ruff format --check .
+        run: ruff format --check ${{ steps.changed-files.outputs.all_changed_files }}
       
       - name: Check all steps
         shell: bash
