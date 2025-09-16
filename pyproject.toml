@@ -1,11 +1,13 @@
 [build-system]
 # Minimum requirements for the build system to execute.
-requires = ["setuptools", "wheel"]  # PEP 508 specifications.
+requires = ["setuptools>=64.0.0", "wheel"]  # PEP 508 specifications.
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "DS_project"
 version = "0.0.1"
 description = "Data Science project template"
+packages = [{include = "src"}]
 authors = [
   {name = "Mikhail S.", email = "fortis3000@gmail.com"}
 ]
