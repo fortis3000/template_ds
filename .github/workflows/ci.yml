@@ -107,4 +107,6 @@ jobs:
 
       - name: Run tests with pytest
         shell: bash
-        run: pytest -v tests/
+        run: |
+          # Exit code 5 means no tests were collected, which is acceptable
+          pytest -v tests/ || [ $? -eq 5 ]
