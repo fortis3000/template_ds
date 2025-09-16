@@ -28,6 +28,24 @@ Project Organization
     │                         generated with `pip freeze > requirements.txt`
     │
     ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+
+
+Logging
+-------
+
+This project provides a general-purpose logger utility in `src/utils/logger.py`.
+
+**Usage Example:**
+
+```python
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
+logger.info("This is an info message.")
+logger.error("This is an error message.")
+```
+
+You can attach this logger to any module or script in the project.
     └── src                <- Source code for use in this project.
         ├── __init__.py    <- Makes src a Python module
         │
