@@ -1,4 +1,5 @@
 import pytest  # noqa: F401
+
 from src.utils import logger
 
 
