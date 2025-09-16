@@ -67,26 +67,26 @@ jobs:
 
           exit 1
 
-    testing:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout the repository
-          uses: actions/checkout@v3
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
 
-        - name: Installing Python
-          uses: actions/setup-python@v4
-          with:
-            python-version: ${{ env.PYTHON_VERSION }}
+      - name: Installing Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-        - name: Install uv
-          uses: yezz123/setup-uv@v4
-          with:
-            uv-venv: "dev_env"
+      - name: Install uv
+        uses: yezz123/setup-uv@v4
+        with:
+          uv-venv: "dev_env"
 
-        - name: Install dev dependencies from pyproject.toml
-          shell: bash
-          run: uv pip install -e .[dev]
+      - name: Install dev dependencies from pyproject.toml
+        shell: bash
+        run: uv pip install -e .[dev]
 
-        - name: Run tests with pytest
-          shell: bash
-          run: uv pip run pytest --maxfail=1 --disable-warnings --tb=short
+      - name: Run tests with pytest
+        shell: bash
+        run: uv pip run pytest --maxfail=1 --disable-warnings --tb=short
