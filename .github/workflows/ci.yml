@@ -89,4 +89,6 @@ jobs:
 
       - name: Run tests with pytest
         shell: bash
+        env:
+          PYTHONPATH: src
         run: pytest --maxfail=1 --disable-warnings --tb=short
