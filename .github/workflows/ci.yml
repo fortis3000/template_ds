@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get changed files
         id: changed-files
@@ -22,7 +22,7 @@ jobs:
             **.py
 
       - name: Installing Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -35,6 +35,14 @@ jobs:
         shell: bash
         id: uv-install
         run: |
+              - name: Cache uv virtualenv
+                uses: actions/cache@v4
+                with:
+                  path: dev_env
+                  key: ${{ runner.os }}-uv-${{ env.PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+                  restore-keys: |
+                    ${{ runner.os }}-uv-${{ env.PYTHON_VERSION }}-
+
           uv --version
           uv pip compile pyproject.toml --extra lint -o requirements.txt
       
@@ -58,11 +66,11 @@ jobs:
         if: steps.ruff-linting.outcome != 'success'  || steps.ruff-format.outcome != 'success'
         run: |
           if [ "$steps.ruff-linting.outcome" != "success" ]; then
-            echo "Sorting imports with isort failed."
+            echo "Linting with ruff failed."
           fi
           
           if [ "$steps.ruff-format.outcome" != "success" ]; then
-            echo "Formatting with black failed."
+            echo "Formatting with ruff failed."
           fi
 
           exit 1
