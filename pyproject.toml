@@ -1,6 +1,7 @@
 [build-system]
 # Minimum requirements for the build system to execute.
-requires = ["setuptools", "wheel"]  # PEP 508 specifications.
+requires = ["setuptools>=64.0.0", "wheel"]  # PEP 508 specifications.
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "DS_project"
@@ -18,7 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest==8.2.0"]
 lint = [
-  "ruff==0.4.1"
+  "ruff==0.13.0"
 ]
 
 [tool.ruff]
