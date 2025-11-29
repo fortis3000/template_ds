@@ -11,7 +11,7 @@ RUN pip install uv
 COPY pyproject.toml uv.lock ./
 
 # Install the project dependencies using uv
-RUN uv pip sync
+RUN uv sync --locked
 
 # Copy the source code into the container
 COPY src/ ./src/
