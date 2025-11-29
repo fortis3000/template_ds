@@ -1,12 +1,20 @@
-.PHONY: precommit requirements_lint
+                          
+.PHONY: precommit install_dev_dependencies
+                          
 
-POETRY_PATH = poetry
-PYTHON_FILES = **/*.py *.py
+                          
+# Install dev dependencies
+                          
+install_dev_dependencies:
+                          
+	uv pip sync --extra lint --extra test --extra dev
+                          
 
-# Install linting requirements
-requirements_lint:
-	${POETRY_PATH} install --only codestyle
-
+                          
 # Local precommit
-precommit: requirements_lint
+                          
+precommit:
+                          
 	bash ./precommit.sh
+                          
+                                                                                                                                       

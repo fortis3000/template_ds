@@ -4,9 +4,10 @@ Standartized DS project template
 Project Organization
 ------------
 
-    ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
     ├── README.md          <- The top-level README for developers using this project.
+    ├── pyproject.toml     <- Project configuration for dependencies, linting, formatting, etc.
+    ├── uv.lock            <- The lock file for reproducing the analysis environment.
     ├── data
     │   ├── external       <- Data from third party sources.
     │   ├── interim        <- Intermediate data that has been transformed.
@@ -24,10 +25,17 @@ Project Organization
     ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
     │   └── figures        <- Generated graphics and figures to be used in reporting
     │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+    └── src                <- Source code for use in this project.
+        ├── __init__.py    <- Makes src a Python module
+        │
+        ├── data           <- Scripts to download or generate data
+        │
+        ├── features       <- Scripts to turn raw data into features for modeling
+        │
+        ├── models         <- Scripts to train models and then use trained models to make
+        │   │                 predictions
+        │
+        └── visualization  <- Scripts to create exploratory and results oriented visualizations
 
 
 Logging
@@ -46,24 +54,6 @@ logger.error("This is an error message.")
 ```
 
 You can attach this logger to any module or script in the project.
-    └── src                <- Source code for use in this project.
-        ├── __init__.py    <- Makes src a Python module
-        │
-        ├── data           <- Scripts to download or generate data
-        │   └── make_dataset.py
-        │
-        ├── features       <- Scripts to turn raw data into features for modeling
-        │   └── build_features.py
-        │
-        ├── models         <- Scripts to train models and then use trained models to make
-        │   │                 predictions
-        │   ├── predict_model.py
-        │   └── train_model.py
-        │
-        └── visualization  <- Scripts to create exploratory and results oriented visualizations
-            └── visualize.py
-
-
 
 --------
 
@@ -82,7 +72,7 @@ The current architecture is based on [Cookiecutter DS](https://github.com/driven
 To track, keep and share your codings [git](https://git-scm.com/) and [GitHub](https://github.com/) services are required.
 
 ### Default programming language
-To leverage modern programming stack it is recommended to start with [Python 3.12](https://www.python.org/downloads/release/python-3120/) as default.
+To leverage modern programming stack it is recommended to start with [Python 3.13](https://www.python.org/downloads/release/python-3130/) as default.
 
 ### Dependency management
 To follow Single-Source-Of-Truth concept it makes sense to use [pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) to store project configuration. `pyproject.toml` configuration file allows to use the same configuration on different project steps: CI/CD, dev, test, prod etc.
@@ -92,10 +82,10 @@ Newly announced [uv tool](https://github.com/astral-sh/uv).
 
 To create new virtual environment:
 ```bash
-uv venv -p 3.12
+uv venv -p 3.13
 ```
 
-You might need to install or provide path to python 3.12 first.
+You might need to install or provide path to python 3.13 first.
 
 Activate an environment on macOS and Linux:
 ```bash
@@ -107,26 +97,18 @@ On Windows:
 .venv\Scripts\activate
 ```
 
-To build an requirements file from `pyproject.toml` use the following command: 
+To install dependencies from `pyproject.toml` (and `uv.lock`):
 ```bash
-uv pip compile pyproject.toml --extra dev --extra lint -o requirements.txt
+uv pip sync --extra dev --extra lint --extra test
 ```
-
-To install compiled file:
-```bash
-uv pip sync requirements.txt
-```
-
-#### Poetry
-To manage Python dependencies using the same file we can use [poetry](https://python-poetry.org/).
 
 ### Codestyle: ruff
 Both for code linting and formatting Ruff package is proposed to use. See [here](https://docs.astral.sh/ruff/) for more details.
 
 Commands:
 ```bash
-ruff format . --config pyproject.toml
-ruff check .  --config pyproject.toml
+ruff format .
+ruff check .
 
 ruff check . --fix
 ```
@@ -135,8 +117,18 @@ ruff check . --fix
 
 As a baseline, CI with integrated code style is provided (see `.github/workflows/ci.yml`). The current setup is based on using public Actions and configuring CI with `pyproject.toml` file. It is also possible to use custom Actions.
 
-### Test suite:
-TO BE DONE (pytest)
+### Test suite: pytest
+
+This project uses [pytest](https://docs.pytest.org/en/stable/) for running tests and [pytest-cov](https://pytest-cov.readthedocs.io/en/latest/) for measuring test coverage.
+
+To run the tests and generate a coverage report, use the following commands:
+
+```bash
+coverage run -m pytest -v .
+coverage report -m
+```
+
+The CI is configured to fail if the test coverage is below 80%.
 
 
 ## Getting started
@@ -168,6 +160,3 @@ or using `.sh` file directly:
 ```bash
 bash ./precommit.sh
 ```
-
-### Cli with typer
-TO BE DONE
