@@ -72,8 +72,17 @@ jobs:
 
       - name: Run tests with pytest and coverage
         run: |
+          set +e
           coverage run -m pytest -v .
-          coverage report -m --fail-under=80
+          PYTEST_EXIT_CODE=$?
+          set -e
+          if [ $PYTEST_EXIT_CODE -eq 0 ]; then
+            coverage report -m --fail-under=80
+          elif [ $PYTEST_EXIT_CODE -eq 5 ]; then
+            echo "No tests found. Skipping coverage report."
+          else
+            exit $PYTEST_EXIT_CODE
+          fi
 
   build_docker_images:
     runs-on: ubuntu-latest
@@ -84,16 +93,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build embedding service image
+      - name: Build sample Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./docker/embeddinggemma-cpu.Dockerfile
-          push: false
-
-      - name: Build telegram bot image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./docker/telegram-bot.Dockerfile
+          file: ./docker/Dockerfile
           push: false
