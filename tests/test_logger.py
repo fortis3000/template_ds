@@ -5,7 +5,7 @@ from src.utils.logger import get_logger
 
 
 def test_get_logger_json_format(capsys):
-    # Reset logger handlers because they are cached by name
+    # Using a unique logger name to ensure a new logger instance is configured.
     logger = get_logger("json_logger")
     logger.info("Hello, world!")
 
