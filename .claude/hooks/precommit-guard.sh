@@ -19,7 +19,7 @@ if [ -z "$python_files" ]; then
 fi
 
 echo "Pre-commit hook: checking Python files with ruff..."
-.venv/bin/ruff check $python_files
+.venv/bin/ruff check -- $python_files
 status=$?
 
 if [ $status -ne 0 ]; then

@@ -1428,7 +1428,7 @@ gh project item-list 123
 gh project item-create 123 --title "New item"
 
 # Add item to project
-gh project item-add 123 --owner-owner --repo repo --issue 456
+gh project item-add 123 --owner owner --url https://github.com/owner/repo/issues/456
 
 # Edit item
 gh project item-edit 123 --id 456 --title "Updated title"
@@ -1489,8 +1489,8 @@ gh release upload v1.0.0 ./file.tar.gz
 # Upload multiple assets
 gh release upload v1.0.0 ./file1.tar.gz ./file2.tar.gz
 
-# Upload with label (casing sensitive)
-gh release upload v1.0.0 ./file.tar.gz --casing
+# Upload and overwrite existing asset
+gh release upload v1.0.0 ./file.tar.gz --clobber
 
 # Delete release
 gh release delete v1.0.0
@@ -1615,9 +1615,7 @@ gh codespace stop
 gh codespace delete
 
 # View logs
-gh codespace logs
-
---tail 100
+gh codespace logs --tail 100
 
 # View ports
 gh codespace ports
