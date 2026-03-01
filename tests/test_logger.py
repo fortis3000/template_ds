@@ -10,7 +10,9 @@ def test_get_logger_json_format(capsys):
     logger.info("Hello, world!")
 
     captured = capsys.readouterr()
-    log_data = json.loads(captured.out)
+    lines = captured.out.strip().splitlines()
+    assert len(lines) == 1, f"Expected 1 log line, but got {len(lines)}"
+    log_data = json.loads(lines[0])
 
     assert log_data["levelname"] == "INFO"
     assert log_data["name"] == "json_logger"
