@@ -1,6 +1,8 @@
 import logging
 import sys
-from typing import Optional
+from typing import List, Optional
+
+_HANDLERS: List[logging.Handler] = []
 
 
 def get_logger(name: Optional[str] = None, level: int = logging.INFO) -> logging.Logger:
@@ -14,12 +16,14 @@ def get_logger(name: Optional[str] = None, level: int = logging.INFO) -> logging
     """
     logger = logging.getLogger(name)
     if not logger.handlers:
-        handler = logging.StreamHandler(sys.stdout)
-        formatter = logging.Formatter(
-            "[%(asctime)s] %(levelname)s %(name)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-        )
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+        if not _HANDLERS:
+            handler = logging.StreamHandler(sys.stdout)
+            formatter = logging.Formatter(
+                "[%(asctime)s] %(levelname)s %(name)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+            )
+            handler.setFormatter(formatter)
+            _HANDLERS.append(handler)
+        logger.addHandler(_HANDLERS[0])
     logger.setLevel(level)
     logger.propagate = False
     return logger
