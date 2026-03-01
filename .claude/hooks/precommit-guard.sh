@@ -10,8 +10,8 @@ if ! echo "$input" | grep -q 'git commit'; then
   exit 0
 fi
 
-# Collect changed files (staged + unstaged)
-changed_files="$( (git diff --name-only --diff-filter=ACMR; git diff --name-only --diff-filter=ACMR --staged) | sort -u )"
+# Collect staged files only (don't block commits due to unstaged WIP)
+changed_files="$(git diff --name-only --diff-filter=ACMR --staged | sort -u)"
 python_files="$(printf '%s\n' "$changed_files" | grep -iE '\.py$' || true)"
 
 if [ -z "$python_files" ]; then
