@@ -1,20 +1,19 @@
-# Use the official Python image as a base
+# Build context: project root (run with `docker build -f docker/Dockerfile .`)
 FROM python:3.13-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Install uv, our package manager
-RUN pip install uv
+# Install uv from the official image (faster and avoids pip warnings)
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
-# Copy the dependency files
+# Install dependencies first (cached unless pyproject.toml/uv.lock change)
 COPY pyproject.toml uv.lock ./
+RUN uv sync --locked --no-dev
 
-# Install the project dependencies using uv
-RUN uv sync --locked
-
-# Copy the source code into the container
+# Copy source code
 COPY src/ ./src/
 
-# Default command to run when the container starts
+# Activate the virtual environment by default
+ENV PATH="/app/.venv/bin:$PATH"
+
 CMD ["bash"]
