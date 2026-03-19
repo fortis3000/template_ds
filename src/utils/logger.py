@@ -4,12 +4,11 @@ from typing import Optional
 
 from pythonjsonlogger import jsonlogger
 
-
-_default_handler = logging.StreamHandler(sys.stdout)
-_default_formatter = jsonlogger.JsonFormatter(
+DEFAULT_HANDLER = logging.StreamHandler(sys.stdout)
+DEFAULT_FORMATTER = jsonlogger.JsonFormatter(
     "%(asctime)s %(levelname)s %(name)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
 )
-_default_handler.setFormatter(_default_formatter)
+DEFAULT_HANDLER.setFormatter(DEFAULT_FORMATTER)
 
 
 def get_logger(name: Optional[str] = None, level: int = logging.INFO) -> logging.Logger:
@@ -23,7 +22,10 @@ def get_logger(name: Optional[str] = None, level: int = logging.INFO) -> logging
     """
     logger = logging.getLogger(name)
     if not logger.handlers:
-        logger.addHandler(_default_handler)
+        # Update the stream to the current sys.stdout to handle cases where
+        # stdout has been replaced (e.g., by pytest's capsys)
+        DEFAULT_HANDLER.setStream(sys.stdout)
+        logger.addHandler(DEFAULT_HANDLER)
     logger.setLevel(level)
     logger.propagate = False
     return logger
