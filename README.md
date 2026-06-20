@@ -102,6 +102,11 @@ To install dependencies from `pyproject.toml` (and `uv.lock`):
 uv pip sync --extra dev --extra lint --extra test
 ```
 
+To update `uv.lock` file:
+```bash
+uv lock --upgrade
+```
+
 ### Codestyle: ruff
 Both for code linting and formatting Ruff package is proposed to use. See [here](https://docs.astral.sh/ruff/) for more details.
 
