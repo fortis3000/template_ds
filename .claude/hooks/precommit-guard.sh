@@ -18,13 +18,15 @@ if [ -z "$python_files" ]; then
   exit 0
 fi
 
-echo "Pre-commit hook: checking Python files with ruff..."
-.venv/bin/ruff check -- $python_files
+# Report on stderr and exit 2: Claude Code only blocks a PreToolUse call on
+# exit code 2, and only feeds stderr back as the reason.
+echo "Pre-commit hook: checking Python files with ruff..." >&2
+.venv/bin/ruff check -- $python_files >&2
 status=$?
 
 if [ $status -ne 0 ]; then
-  echo "BLOCKED: ruff check failed. Fix issues before committing."
-  exit 1
+  echo "BLOCKED: ruff check failed. Fix issues before committing." >&2
+  exit 2
 fi
 
 exit 0
