@@ -3,7 +3,12 @@
     "PreToolUse": [
       {
         "matcher": "Bash",
-        "command": "bash .claude/hooks/precommit-guard.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/precommit-guard.sh"
+          }
+        ]
       }
     ]
   }
